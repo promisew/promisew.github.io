@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="智能社 - zhinengshe.com" />
+<meta name="copyright" content="智能社 - zhinengshe.com" />
+<title>智能社 - www.zhinengshe.com</title>
+<script src="jquery-1.7.2.js"></script>
+<script>
+$(function(){
+	var oCk=$('#ck1');
+	var oDiv=$('#div1');
+	var aIpt=oDiv.find('input');
+	//全选，不选
+	oCk.click(function(){
+		if($(this).attr('checked')){
+			alert($(this).attr('checked'));
+			aIpt.attr('checked',true);	
+		}else{
+			aIpt.attr('checked',false);	
+		}
+	});	
+	
+	//联动
+	aIpt.click(function(){
+		if(oDiv.find('input:checked').length==aIpt.length){
+			//checked=true	
+			alert(oDiv.find('input:checked').length==aIpt.length);
+			oCk.attr('checked',true);
+		}else{
+			alert(false);
+			oCk.attr('checked',false);	
+		}
+	});
+});
+</script>
+</head>
+
+<body>
+<input id="ck1" type="checkbox" />
+<hr />
+<div id="div1">
+    <input type="checkbox" /><br />
+    <input type="checkbox" /><br />
+    <input type="checkbox" /><br />
+    <input type="checkbox" /><br />
+</div>
+</body>
+</html>
