@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
+<title>蒋开勇的个人网页</title>
 <link href="index.css" rel="stylesheet">
 <script src="jquery-1.7.2.js"></script>
 <script src="move.js"></script>
@@ -155,100 +155,7 @@ $(function(){
 		}
 		
 	})();
-	//轮播图
-	(function(){
-		var oDiv=document.getElementById('item1');
-		var aSpan=oDiv.getElementsByTagName('span');
-		var oUl=oDiv.getElementsByTagName('ul')[0];
-		var oOl=oDiv.getElementsByTagName('ol')[0];
-		var oPre=oDiv.getElementsByTagName('span')[0];
-		var oNext=oDiv.getElementsByTagName('span')[1];
-		var aLi=oUl.children;
-		var aBtn=oOl.children;
-		var iNow=0;
-		var len=aBtn.length;
-		oUl.innerHTML += oUl.innerHTML;
-		oUl.style.width=aLi[0].offsetWidth*aLi.length + "px";
-		var w = oUl.offsetWidth/2;
-		var timer=null;
-		timer=setInterval(function(){
-			iNow++;
-			tab();
-		},1000);
-		oDiv.onmouseover=function(){
-			clearInterval(timer);
-			for(var i=0;i<aSpan.length;i++){
-				aSpan[i].style.display="block";
-			}
-		};
-		oDiv.onmouseout=function(){
-			
-			for(var i=0;i<aSpan.length;i++){
-				aSpan[i].style.display="none";
-			}
-			timer=setInterval(function(){
-				iNow++;
-				tab();
-			},1000);
-		};
-		for(var i=0;i<len;i++){
-			(function(index){
-				aBtn[i].onclick=function(){
-					if(aBtn[0].className == "active" && index == len-1){
-						iNow--;
-					} else if(aBtn[len-1].className == "active" && index == 0){
-						iNow++;
-					} else {
-						iNow = Math.floor(iNow/len)*len + index;
-					}
-					tab();
-				};
-			})(i);
-		}
-		oPre.onclick = function(){
-			iNow--;
-			tab();
-		};
-		
-		oNext.onclick = function(){
-			iNow++;
-			tab();
-		};
-		function tab(){
-			for(var i = 0; i < len; i++){
-				aBtn[i].className = "";
-			}	
-			if(iNow > 0){
-				aBtn[iNow%len].className = "active";
-			} else {
-				aBtn[(iNow%len+len)%len].className = "active";
-			}
-			move(oUl,-aLi[0].offsetWidth*iNow,700);
-		}
-		var left = 0;
-		function move(obj,iTarget,time){
-			var start = left;
-			var dis = iTarget - start;
-			var count = Math.round(time/30);
-			var n = 0;
-			clearInterval(obj.timer);
-			obj.timer = setInterval(function(){
-				n++;
-				var a = 1 - n/count;
-				var cur = start + dis*(1 - a*a*a);
-				left = cur;
-				if(left < 0){
-					obj.style.left = left%w + "px";
-				} else {
-					obj.style.left = (left%w-w)%w + "px";	
-				}
-				if(n == count){
-					clearInterval(obj.timer);
-				}
-			},30);
-		}
-
-	})();
+	
 	//球的拖拽
 	(function(){
 		var oBox=document.getElementById('item2');
@@ -480,11 +387,11 @@ $(function(){
 	var oUl=document.getElementById('ul2');
 	var aLi=oUl.children;
 	for(var i=0;i<aLi.length;i++){
-		aLi[i].onmouseover=function(){
+		aLi[i].onmouseenter=function(){
 			var thisDiv=this.children[1];	
 			Move(thisDiv,{bottom:0,opacity:1},300);
 		};	
-		aLi[i].onmouseout=function(){
+		aLi[i].onmouseleave=function(){
 			var thisDiv=this.children[1];	
 			Move(thisDiv,{bottom:-80,opacity:0},300);
 		};	
@@ -543,45 +450,32 @@ function Move(obj,json,time){
       </div>
   <div id="submenu-wrapper">
     <ul class="submenu">
-        <li> <a href="#"> <img src="Sample Pictures/1.jpg" /> PS图象处理软件效应对CSS3属性 </a> </li>
-        <li> <a href="#"> <img src= "Sample Pictures/2.jpg"/> CSS3的音乐播放器菜单 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/3.jpg"/> 用象形webfont替换图像 </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/1.jpg" />  </a> </li>
+        <li> <a href="#"> <img src= "Sample Pictures/2.jpg"/> </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/3.jpg"/> </a> </li>
     </ul>
     <ul class="submenu">
-        <li> <a href="#"> <img src="Sample Pictures/4.jpg" /> 使用jQuery和CSS3形式的搜索 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/5.jpg" /> 使用jQuery创建幻灯片 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/6.jpg" /> 创建您自己的仪表板菜单 </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/4.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/5.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/6.jpg" />  </a> </li>
     </ul>
     <ul class="submenu">
-        <li> <a href="#"> <img src="Sample Pictures/7.jpg" /> jQuery代码片断：淡出网页 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/8.jpg" /> [代码片断] CSS3的飞行菜单 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/9.jpg" /> [代码片断]推特像输入使用CSS3 </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/7.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/8.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/9.jpg" />  </a> </li>
     </ul>
     <ul class="submenu">
-        <li> <a href="#"> <img src="Sample Pictures/10.jpg" /> jQuery插件：jconfirmaction </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/11.jpg" /> 免费的Web UI元素包 </a> </li>
-        <li> <a href="#"> <img src="Sample Pictures/12.jpg" /> 免费PSD：粘贴按钮 </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/10.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/11.jpg" />  </a> </li>
+        <li> <a href="#"> <img src="Sample Pictures/12.jpg" /> </a> </li>
     </ul>
   </div>
 </div>
 
-<div class="bar"></div>
+
 <div class="worker">
 	<div class="item" id="item"></div>
-	<div class="item1" id="item1">
-    	<ul>
-        	<li><img src="images/1.png" width="650" /></li>
-        	<li><img src="images/2.png" width="650" /></li>
-        	<li><img src="images/3.png" width="650" /></li>
-        </ul>
-        <ol>
-        	<li class="active"></li>
-        	<li></li>
-        	<li></li>
-        </ol>
-        <span class="sp_l">&lt;</span>
-        <span class="sp_r">&gt;</span>
-    </div>
+	
     <div id="item2" class="item2">
     	<ul>
         	<li class="color1">Nature</li>
@@ -610,104 +504,114 @@ function Move(obj,json,time){
 
   <div class="link">
        <span class="links">其他一些效果</span>
-       <ul id="ul2">
+   <ul id="ul2">
      <li>
-       <a href="jq实例素材/例子-弹出层效果-jQuery版/poplayer.html">
+       <a href="jq/瀑布流.html" />
           <img src="img/7.jpg" />
+       </a>
+          <div>
+              <em>
+                <h2>瀑布流</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+        
+     </li>
+     <li>
+       <a href="jq/HTML5 CSS3 图片选择动画/html5-css3-image-selector/index.html">
+          <img src="img/8.jpg" />
         </a>  
           <div>
               <em>
-                <h2>弹出层效果-jQuery版</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
-              </em>
-              <span class="bg"></span>
-          </div>
-       
-     </li>
-     <li>
-          <img src="img/8.jpg" />
-          <div>
-              <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>HTML5 CSS3 图片选择动画</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+        <a href="appMenu/appMenu.html">
           <img src="img/9.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>appMenu</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+       <a href="appMenu/drag.html">
           <img src="img/10.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>Drag</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+        <a href="jq/分步运动.html">
           <img src="img/11.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>分步运动</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+       <a href="Lucky/6-14.折叠菜单/zns_demo2.html">
           <img src="img/12.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>折叠菜单</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+       <a href="Lucky/6-15.手风琴/index.html">
           <img src="img/13.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>手风琴</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+       <a href="Lucky/7-5.倒计时幻灯片/倒计时幻灯片2.html">
           <img src="img/14.jpg" />
+        </a>  
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>倒计时幻灯片</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
      <li>
+       <a href="Lucky/放大镜.html">
           <img src="img/15.jpg" />
+       </a>   
           <div>
               <em>
-                <h2>CSS3的IOS6密码解锁界面</h2>
-            	<p>随手写的一个css3的IOS解锁界面</p>
+                <h2>放大镜</h2>
               </em>
               <span class="bg"></span>
           </div>
      </li>
   </ul>
  </div>
+ <div class="footer">
+      <span class="footers">H5和CSS3的一些效果</span>
+ </div>
 </div>
-<div class="resume">
+
 </div>
 
 </body>

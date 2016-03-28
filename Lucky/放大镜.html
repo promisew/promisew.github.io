@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+
+<title></title>
+<style>
+*{ margin:0; padding:0; list-style:none; font-family: "微软雅黑","张海山锐线体简"}
+#div1{width:310px;height:310px; position:relative;}
+#mark{width:80px;height:80px; background:green; opacity:0.5; position:absolute;left:0;top:0; display:none;}
+#div2{ position:absolute;left:330px;top:0;width:310px;height:310px; overflow:hidden; display:none;}
+#div2 img{ position:absolute;left:0;top:0}
+</style>
+<script>
+window.onload=function(){
+	var oDiv1=document.getElementById('div1');
+	var oDiv2=document.getElementById('div2');
+	var oBigImg=document.getElementById('bigImg');
+	var oMark=document.getElementById('mark');
+	oDiv1.onmouseover=function(){
+		oMark.style.display='block';
+		oDiv2.style.display='block';	
+	};	
+	oDiv1.onmouseout=function(){
+		oMark.style.display='none';
+		oDiv2.style.display='none';	
+	};	
+	oDiv1.onmousemove=function(ev){
+		var oEvt=ev||event;
+		var l=oEvt.clientX-oMark.offsetWidth/2;
+		var t=oEvt.clientY-oMark.offsetHeight/2;
+		
+		
+		
+		if(l<0) l=0;
+		if(l>oDiv1.offsetWidth-oMark.offsetWidth)
+			l=oDiv1.offsetWidth-oMark.offsetWidth;
+		if(t<0) t=0;
+		if(t>oDiv1.offsetHeight-oMark.offsetHeight)
+			t=oDiv1.offsetHeight-oMark.offsetHeight;
+		
+		oMark.style.left=l+'px';
+		oMark.style.top=t+'px';	
+		
+		
+		oBigImg.style.left=-oMark.offsetLeft/(oDiv1.offsetWidth-oMark.offsetWidth)*(oBigImg.offsetWidth-oDiv2.offsetWidth)+'px';
+		oBigImg.style.top=-oMark.offsetTop/(oDiv1.offsetHeight-oMark.offsetHeight)*(oBigImg.offsetHeight-oDiv2.offsetHeight)+'px';
+	};
+};
+
+     
+</script>
+</head>
+
+<body>
+
+<div id="div1">
+	<img src="img/m1.jpg">
+    <div id="mark"></div>
+</div>
+<div id="div2">
+    <img src="img/b1.jpg" id="bigImg">
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+<style>
+*{ margin:0; padding:0; list-style:none; font-family: "微软雅黑","张海山锐线体简"}
+#ul1{width:795px;height:795px; border:#333 solid 1px;margin:0 auto; position:relative;}
+#ul1 li{width:250px;height:250px;background:#ccc; border:#333 solid 1px; float:left;margin-left:10px;margin-top:10px;}
+</style>
+<script src="move9.js"></script>
+<script>
+window.onload=function(){
+	var oUl=document.getElementById('ul1');
+	var aLi=oUl.children;
+	var oBtn=document.getElementById('btn1');
+	var content=0;
+	var ready=true;
+	
+	var aPos=[];
+	for(var i=0;i<aLi.length;i++){
+		aPos.push({
+			left:aLi[i].offsetLeft,
+			top:aLi[i].offsetTop,
+			width:aLi[i].offsetWidth,
+			height:aLi[i].offsetHeight,
+			opacity:1
+			});	
+		aLi[i].style.left=aPos[i].left+'px';
+		aLi[i].style.top=aPos[i].top+'px';
+	}
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].style.position='absolute';	
+		aLi[i].style.margin=0;
+		aLi[i].innerHTML=content++;
+	}
+	oBtn.onclick=function(){
+	    if(!ready) return;
+		ready=false;
+		down()	
+	}
+	function down(){
+		var i=aLi.length-1;
+		var timer=setInterval(function(){
+			(function(index){
+				move(aLi[i],{left:oUl.offsetWidth/2,top:oUl.offsetHeight,width:10,height:10,opacity:0.5},{time:700,fn:function(){
+					if(index==0){
+						
+						
+						
+						for(var i=0;i<aLi.length;i++){
+							aLi[i].innerHTML=content++;	
+						}
+						
+						
+						up();	
+					}
+				}});
+			})(i);	
+			
+			i--;
+			if(i==-1) clearInterval(timer);	
+		},100);	
+	}
+	function up(){
+		var i=aLi.length-1;
+		var timer=setInterval(function(){
+			(function(index){
+				move(aLi[i],aPos[i],{time:700,fn:function(){
+					if(index==0){
+						ready=true;	
+					}
+				}});	
+			})(i);
+			
+			i--;
+			if(i==-1) clearInterval(timer);	
+		},100);	
+	}
+};
+</script>
+</head>
+
+<body>
+<input type="button" value="下一张" id="btn1">
+<ul id="ul1">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+
+</body>
+</html>
