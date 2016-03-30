@@ -2,111 +2,686 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
-<style>
-*{ margin:0; padding:0;}
-html{overflow:hidden;}
-body{background:#000;}
-#c1{ background:#000;}
-</style>
+<title>蒋开勇的个人网页</title>
+<link href="index.css" rel="stylesheet">
+<script src="jquery-1.7.2.js"></script>
+<script src="move.js"></script>
 <script>
-
-function rnd(n,m){
-    return Math.floor(Math.random()*(m-n)+n)	
-}
 window.onload=function(){
-	var oC=document.getElementById('c1')
-	var gd=oC.getContext("2d");
+$(function(){
+	var aMenuLi=$('.menu li');
+	var subMenuWrapper=$('#submenu-wrapper');
+	var firtSubMenu=$('#submenu-wrapper ul:eq(0)');
+	var subMenuUl=subMenuWrapper.find('ul');
 	
-	var winW= window.innerWidth;
-	var winH=window.innerHeight;
-	oC.width=winW;
-	oC.height=winH
+	aMenuLi.hover(function(){
+		subMenuWrapper.stop().animate({'marginTop':0});
+		firtSubMenu.stop().animate({'marginTop':$(this).index()*-129});
+	},function(){
+		subMenuWrapper.stop().animate({'marginTop':'-135px'});
+	});
 	
-	var N=5;
-	var aPoint=[];
-	for(var i=0;i<N;i++){
-	    aPoint[i]={
-			w:1,
-			h:1,
-			x:rnd(0,winW),
-			y:rnd(0,winH),
-			speedX:rnd(-10,10),
-			speedY:rnd(-10,10)
-		}	
+	subMenuWrapper.hover(function(){
+		subMenuWrapper.stop().animate({'marginTop':0});	
+	},function(){
+		subMenuWrapper.stop().animate({'marginTop':'-135px'});
+	});
+	
+	subMenuUl.hover(function(){
+		//$(this).index()
+		aMenuLi.eq($(this).index()).addClass('selected');	
+	},function(){
+		aMenuLi.eq($(this).index()).removeClass('selected');		
+	});
+	
+	subMenuUl.children('li').hover(function(){
+		$(this).stop().animate({'opacity':1}).siblings().stop().animate({'opacity':0.5});
+	},function(){
+		$(this).siblings().stop().animate({'opacity':1});
+	});
+});
+
+
+//分块图
+	(function(){
+		var oDiv = document.getElementById('item');
+		
+		var R = 20;
+		var C = 11;
+		
+		for(var r = 0;r < R;r++){
+			for(var c = 0;c < C;c++){
+				var oSpan = document.createElement('span');
+				oDiv.appendChild(oSpan);
+				if(r == 0 && c == 0){
+					oSpan.style.borderRadius ="8px 0 0 0";
+				}
+				if(r == 0 && c == C-1){
+					oSpan.style.borderRadius ="0 0 0 8px";
+				}
+				if(r == R-1 && c == C-1){
+					oSpan.style.borderRadius ="0 0 8px 0";
+				}
+				if(r == R-1 && c == 0){
+					oSpan.style.borderRadius ="0 8px 0 0 ";
+				}
+				oSpan.style.width = oDiv.offsetWidth/R + "px";
+				oSpan.style.height = oDiv.offsetHeight/C + "px";
+				oSpan.style.left = oSpan.offsetWidth*r + "px";
+				oSpan.style.top = oSpan.offsetHeight*c + "px";
+				oSpan.style.backgroundPosition = "-" + oSpan.offsetWidth*r + "px -" + oSpan.offsetHeight*c + "px";
+			}
+		}
+		oDiv.timer = null;
+		var iNow = 1;
+		var bReady = true;
+		oDiv.onmouseenter=oDiv.onmouseover=function(){
+			clearInterval(oDiv.timer);
+			var oEm = document.createElement('em');
+			switch(iNow){
+				case 1:
+					oEm.innerHTML = "Venice";
+					break;
+				case 2:
+					oEm.innerHTML = "Swan";
+					break;
+				case 3:
+					oEm.innerHTML = "Polar Bear";
+					break;
+				case 4:
+					oEm.innerHTML = "Tank";
+					break;
+				case 5:
+					oEm.innerHTML = "Night on the Prairie";
+					break;
+				case 6:
+					oEm.innerHTML = "Starry";
+					break;
+			}
+			var aEm = oDiv.getElementsByTagName('em');
+			if(aEm.length == 0){
+				oDiv.appendChild(oEm);
+			}
+			move(oEm,{bottom:0});
+		};
+		
+		oDiv.onmouseleave=function(){
+			var oEm = oDiv.getElementsByTagName('em')[0];
+			move(oEm,{bottom:-100},{duration:200,complete:function(){
+				oDiv.removeChild(oEm);
+				bReady = true;
+				tabSwitch();
+			}});
+		};
+		tabSwitch();
+		function tabSwitch(){
+			oDiv.timer=setInterval(function(){
+				
+				imgTab();
+			},1000);
+			
+		};
+		
+		function imgTab(){
+			if(bReady==false) return;
+			bReady=false;
+			var aSpan=oDiv.children;
+			var count=0;
+			for(var i=0;i<aSpan.length;i++){
+				//url(images/1_1.png)
+				aSpan[i].style.backgroundImage="url(imag/"+iNow+".jpg)";
+				aSpan[i].style.opacity="1";
+			}
+			iNow++;
+			if(iNow==7){
+				iNow=1;
+			}
+			oDiv.style.backgroundImage="url(imag/"+iNow+".jpg)";
+			
+			
+			for(var i=0;i<aSpan.length;i++){
+				(function(index){
+					aSpan[index].timer=setTimeout(function(){
+							move(aSpan[index],{opacity:0},{complete:function(){
+							count++;
+							clearInterval(aSpan[index].timer);
+							if(count==aSpan.length){
+								bReady=true;
+							}
+						}});
+					},600*Math.random())
+				})(i);
+			}
+		}
+		
+	})();
+	
+	//球的拖拽
+	(function(){
+		var oBox=document.getElementById('item2');
+		var oUl=oBox.getElementsByTagName('ul')[0];
+		var aLi=oUl.children;
+		var len=aLi.length;
+		var zIndex=1;
+		var aPos=[];
+		var bClick=false;
+		oUl.ondblclick=function(){
+			if(bClick) return;
+			bClick=true;
+			var arr = [0,1,2,3,4,5,6,7];
+			arr.sort(function(){
+				return Math.random()-0.5;
+			});
+			for(var i=0;i<len;i++){
+				aLi[i].index = arr[i];
+			}
+			for(var i=0;i<len;i++){
+				(function(index){
+					move(aLi[index],aPos[aLi[index].index],{complete:function(){
+						if(index==len-1){
+							bClick=false
+						}
+					}});
+				})(i);
+			}
+		};
+		for(var i=0;i<len;i++){
+			aPos[i]={left:aLi[i].offsetLeft,top:aLi[i].offsetTop};
+			aLi[i].style.left=aPos[i].left+"px";
+			aLi[i].style.top=aPos[i].top+"px";
+		}
+		for(var i=0;i<len;i++){
+			aLi[i].style.position="absolute";
+			aLi[i].style.margin="0";
+		}
+		for(var i=0;i<len;i++){
+			aLi[i].index=i;
+			drag(aLi[i]);
+		}
+		for(var i=0;i<len;i++){
+			aLi[i].onmouseenter=function(){
+				var oSpan=document.createElement('span');
+				oSpan.className='active';
+				var color=(this.currentStyle || getComputedStyle(this,false)).backgroundColor;
+				oSpan.style.borderColor=color;
+				this.appendChild(oSpan);
+				
+			};
+			aLi[i].onmouseleave=function(){
+				var oSpan=this.children[0];
+				this.removeChild(oSpan);
+			};
+		}
+		function collTest(obj1,obj2){
+			var l1=obj1.offsetLeft;
+			var t1=obj1.offsetTop;
+			var r1=l1+obj1.offsetWidth;
+			var b1=t1+obj1.offsetHeight;
+			
+			var l2=obj2.offsetLeft;
+			var t2=obj2.offsetTop;
+			var r2=l2+obj2.offsetWidth;
+			var b2=t2+obj2.offsetHeight;
+			
+			if(r1<l2 || b1<t2 || l1>r2 || t1>b2){
+				return false;
+			}else{
+				return true;
+			}
+			
+		}
+		function drag(obj){
+			obj.onmousedown=function(ev){
+				var oEvent=ev || event;
+				var disX=oEvent.clientX-obj.offsetLeft;
+				var disY=oEvent.clientY-obj.offsetTop;
+				obj.style.zIndex = zIndex++;
+				document.onmousemove = function(ev){
+					var oEvent = ev || event;
+					obj.style.left = oEvent.clientX-disX+"px";
+					obj.style.top = oEvent.clientY-disY+"px";
+					
+				};
+				document.onmouseup = function(){
+					document.onmousemove = null;
+					document.onmouseup = null;
+					obj.releaseCapture && obj.releaseCapture();
+					
+					var oNear=findMin(obj);
+					if(oNear){
+						var tmp = obj.index;
+						obj.index = oNear.index;
+						oNear.index = tmp;
+						move(oNear,aPos[oNear.index]);
+					}
+					move(obj,aPos[obj.index]);
+				};
+				obj.setCapture && obj.setCapture();
+				return false;
+				
+			};
+		}
+		function getDis(obj1,obj2){
+			var a = obj2.offsetLeft-obj1.offsetLeft;
+			var b = obj2.offsetTop-obj1.offsetTop;
+			return Math.sqrt(a*a + b*b);
+		}
+		function findMin(obj){
+			var iMin = 99999;
+			var iMinIndex = -1;
+			for(var i=0;i<len;i++){
+				if(obj == aLi[i]) continue;
+				if(collTest(obj,aLi[i])){
+					var dis = getDis(obj,aLi[i]);
+					if(dis<iMin){
+						iMin = dis;
+						iMinIndex = i;
+					}
+				}
+			}
+			if(iMinIndex == -1){return null};
+			return aLi[iMinIndex];
+		}
+	})();
+	//吸顶条
+	(function(){
+		var oPara = document.getElementById('para');
+		var oParaT = oPara.offsetTop;
+		var oAdd = document.getElementById('addp');
+		window.onscroll = function(){
+			var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+			if(scrollTop>oParaT){
+				oPara.style.position = "fixed";
+				oPara.style.top = '0';
+				oPara.style.left = '50%';
+				oPara.style.marginLeft = -510+"px";
+				oPara.style.zIndex = 9999;
+				oAdd.style.display = "block";
+			}else{
+				oPara.style.position = '';
+				oPara.style.margin = "0 auto";
+				oAdd.style.display = "none";
+			}
+			
+		};
+	})();
+	//头像
+	(function(){
+		var oUl=document.getElementById('face');
+		var aLi  = oUl.children;
+		
+		for(var i = 0; i < aLi.length; i++){
+			lago(aLi[i]);
+		}
+		
+		
+		function direction(obj,oEvent){
+			var scrollTop=document.body.scrollTop || document.documentElement.scrollTop;			
+			var x = oEvent.clientX - obj.offsetLeft - obj.offsetWidth/2;
+			var y = obj.offsetHeight/2 + obj.offsetTop -  (oEvent.clientY + scrollTop);
+			var a = Math.atan2(y,x);
+			
+			// 0 左  1下 2 右 3 上
+			
+			return Math.round((a*180/Math.PI + 180)/90)%4;	
+		}
+		
+		function lago(oDiv){
+			oDiv.onmouseover = function(ev){
+				var oEvent = ev || event;
+				var oSrc = oEvent.formElememnt || oEvent.relatedTarget;
+				if(oDiv.contains(oSrc)){
+					return;
+				}
+				var oSpan = this.children[1];
+				var n = direction(oDiv,oEvent);
+				switch(n){
+					case 0:// 0 左 
+					oSpan.style.left = "-200px";
+					oSpan.style.top = "0";
+					break;
+					case 1://  1下
+					oSpan.style.left = "0";
+					oSpan.style.top = "200px";
+					break;
+					case 2://  2 右 
+					oSpan.style.left = "200px";
+					oSpan.style.top = "0";
+					break;
+					case 3:// 3 上
+					oSpan.style.left = "0";
+					oSpan.style.top = "-200px";
+					break;
+				}
+				
+				move(oSpan,{left:0,top:0});
+			};
+			oDiv.onmouseout = function(ev){
+				var oSpan = this.children[1];
+				var oEvent = ev || event;
+				var oTo = oEvent.toElememnt || oEvent.relatedTarget;
+				if(oDiv.contains(oTo)){
+					return;
+				}
+				var n = direction(oDiv,oEvent);
+				switch(n){
+					case 0:
+						move(oSpan,{left:-200,top:0});
+					break;
+					case 1:
+					 move(oSpan,{left:0,top:200});
+					break;
+					case 2:
+					 move(oSpan,{left:200,top:0});
+					break;
+					case 3:
+					  move(oSpan,{left:0,top:-200});
+					break;
+				}
+			};	
+		}
+	})();
+	
+//更多
+ (function(){
+	var oUl=document.getElementById('ul2');
+	var aLi=oUl.children;
+	for(var i=0;i<aLi.length;i++){
+		aLi[i].onmouseenter=function(){
+			var thisDiv=this.children[1];	
+			Move(thisDiv,{bottom:0,opacity:1},300);
+		};	
+		aLi[i].onmouseleave=function(){
+			var thisDiv=this.children[1];	
+			Move(thisDiv,{bottom:-80,opacity:0},300);
+		};	
 	}
-	
-	var oldPoint=[];
-	setInterval(function(){
-	   gd.clearRect(0,0,oC.width,oC.height)
-	   	for(var i=0;i<N;i++){
-		     drawPoint(aPoint[i]);
-			 
-			 aPoint[i].x +=aPoint[i].speedX;
-			 aPoint[i].y +=aPoint[i].speedY;
-			 
-			 if(aPoint[i].x<0){
-			      aPoint[i].speedX*=-1;
-			 }
-			 if(aPoint[i].x>winW){
-			      aPoint[i].speedX*=-1;
-			 }
-			 if(aPoint[i].y<0){
-			      aPoint[i].speedY*=-1;
-			 }	
-			 if(aPoint[i].y>winH){
-			      aPoint[i].speedY*=-1;
-			 }			
-		}
-		
-		//连接
-		gd.beginPath();
-		gd.moveTo(aPoint[0].x,aPoint[0].y);
-		for(var i=1;i<N; i++){
-		     gd.lineTo(aPoint[i].x,aPoint[i].y)	
-		}
-		gd.closePath();
-		gd.strokeStyle='red';
-		gd.stroke();
-		
-		//存点
-		var arr=[];
-		for(var i=0;i<N;i++){
-		     arr.push({x:aPoint[i].x,y:aPoint[i].y});
-			 	
-		}
-		oldPoint.push(arr);
-		
-		while(oldPoint.length>20){
-		     oldPoint.shift();	
-		}
-		
-		//画影子
-		for(var i=0;i<oldPoint.length;i++){
-		     gd.beginPath();
-			 gd.moveTo(oldPoint[i][0].x,oldPoint[i][0].y);
-			 
-			 for(var j=1;j<N; j++){
-			     gd.lineTo(oldPoint[i][j].x,oldPoint[i][j].y);	 
-			}	
-			gd.closePath();
-			var opacity=i/oldPoint.length;
-			gd.strokeStyle="rgba(255,0,0,"+opacity+")";
-			gd.stroke()
-		}
-	},16)
-	
-	function drawPoint(p){
-	     gd.fillStyle="#fff";
-		 gd.fillRect(p.x,p.y,p.w,p.h)
-		 gd.strokeRect(p.x,p.y,p.w,p.h);	
-	}
-	
+  })()
+
+function getStyle(obj,attr){
+	return obj.currentStyle?obj.currentStyle[attr]:getComputedStyle(obj,false)[attr];
 }
+function Move(obj,json,time){
+	var start={};
+	var dis={};
+	for(var key in json){
+		start[key]=parseInt(getStyle(obj,key));
+		dis[key]=json[key]-start[key];
+	}
+	
+	var count=Math.round(time/30);
+	var n=0;
+	
+	clearInterval(obj.timer);
+	obj.timer=setInterval(function(){
+		n++;
+		
+		for(var key in json){
+			//办事
+			var cur=start[key]+n*dis[key]/count;
+			
+			if(key=='opacity'){
+				obj.style.opacity=cur;
+				obj.style.filter='alpha(opacity:'+cur*100+')';
+			}else{
+				obj.style[key]=cur+'px';
+			}	
+		}
+		
+		if(n==count) clearInterval(obj.timer);	
+	},30);
+	
+	function Drag(obj){
+		 var y = 0;
+		 var x = 0;
+		 obj.onmousedown = function(ev){
+			  var disX = ev.clientX - y;
+			  var disY = ev.clientY - x;
+			  
+			  document.onmousemove = function(ev){
+				  
+				  y = ev.clientX - disX;
+				  x = ev.clientY - disY;
+				  
+				  document.title = y;
+			  
+				  obj.style.transform = "perspective(800px) rotateX("+-x+"deg) rotateY("+y+"deg)";
+				  
+			  };
+			  
+			  document.onmouseup = function(){
+				  document.onmousemove = null;
+				  document.onmouseup = null;
+			  };
+			  
+			  return false;	
+		  };
+		
+	  }
+	  (function(){
+		  var oDiv1=document.getElementById('div1');
+		  var oDiv2=document.getElementById('div2');
+	      	 Drag(oDiv1);
+			 Drag(oDiv2) 
+	 })()
+	 
+   }
+
+}
+
+
 </script>
 </head>
 
 <body>
-<canvas id="c1"></canvas>
+<div id="box">
+      <div id="menu-wrapper">
+            <ul class="menu">
+               <li><a href="#">HTML</a></li>
+               <li><a href="#">JAVASCRIPT</a></li>
+               <li><a href="#">HTML5</a></li>
+               <li><a href="#">更 多</a></li>
+            </ul>
+      </div>
+  <div id="submenu-wrapper">
+    <ul class="submenu">
+        <li> <a href="#"> <img src="img/1.jpg"/> </a> </li>
+        <li> <a href="#"> <img src="img/2.jpg"/> </a> </li>
+        <li> <a href="#"> <img src="img/3.jpg"/></a> </li>
+    </ul>
+    <ul class="submenu">
+        <li> <a href="#"> <img src="img/4.jpg"/>  </a> </li>
+        <li> <a href="#"> <img src="img/5.jpg"/> </a> </li>
+        <li> <a href="#"> <img src="img/6.jpg"/> </a> </li>
+    </ul>
+    <ul class="submenu">
+        <li> <a href="#"> <img src="img/7.jpg"/>  </a> </li>
+        <li> <a href="#"> <img src="img/8.jpg"/>  </a> </li>
+        <li> <a href="#"> <img src="img/9.jpg"/>  </a> </li>
+    </ul>
+    <ul class="submenu">
+        <li> <a href="#"> <img src="img/10.jpg"/> </a> </li>
+        <li> <a href="#"> <img src="img/11.jpg"/> </a> </li>
+        <li> <a href="#"><img src="img/12.jpg"/></a> </li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="worker">
+	<div class="item" id="item"></div>
+	
+    <div id="item2" class="item2">
+    	<ul>
+        	<li class="color1">Nature</li>
+        	<li class="color2">People</li>
+        	<li class="color3">Sport</li>
+        	<li class="color4">Travel</li>
+        	<li class="color5">Film</li>
+        	<li class="color6">Concert</li>
+        	<li class="color7">Family</li>
+        	<li class="color8">Food</li>
+        </ul>
+    </div>
+    <p class="addp" id="addp"></p>
+    <p class="para" id="para">"Great photography is about depth of feeling, not depth of field."</p>
+
+	<ul class="face" id="face">
+    	<li><img src="img/1.jpg" /><span _class="color1">Joan Elliott</span></li>
+    	<li><img src="img/2.jpg" /><span _class="color2">Amanda Burns</span></li>
+    	<li><img src="img/3.jpg" /><span _class="color3">Carolyn Nichols</span></li>
+    	<li><img src="img/4.jpg" /><span _class="color4">Daniel Rogers</span></li>
+    	<li><img src="img/5.jpg" /><span _class="color5">Phillip Chen</span></li>
+    	<li><img src="img/6.jpg" /><span _class="color6">Heather Hughes</span></li>
+    </ul>
+
+
+
+  <div class="link">
+       <span class="links">其他一些效果</span>
+   <ul id="ul2">
+     <li>
+       <a href="Lucky/瀑布流/瀑布流.html"/>
+          <img src="img/7.jpg" />
+       </a>
+          <div>
+              <em>
+                <h2>瀑布流</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+        
+     </li>
+     <li>
+       <a href="Lucky/HTML5 CSS3 图片选择动画/html5-css3-image-selector/index.html">
+          <img src="img/8.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>HTML5 CSS3 图片选择动画</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+        <a href="Lucky/appMenu/appMenu.html">
+          <img src="img/9.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>appMenu</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+       <a href="Lucky/拖拽/drag.html">
+          <img src="img/10.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>Drag</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+        <a href="Lucky/分布运动/分步运动.html">
+          <img src="img/11.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>分步运动</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+       <a href="Lucky/6-14.折叠菜单/zns_demo2.html">
+          <img src="img/12.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>折叠菜单</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+       <a href="Lucky/6-15.手风琴/index.html">
+          <img src="img/13.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>手风琴</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+       <a href="Lucky/7-5.倒计时幻灯片/倒计时幻灯片2.html">
+          <img src="img/14.jpg" />
+        </a>  
+          <div>
+              <em>
+                <h2>倒计时幻灯片</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+     <li>
+       <a href="Lucky/放大镜.html">
+          <img src="img/15.jpg" />
+       </a>   
+          <div>
+              <em>
+                <h2>放大镜</h2>
+              </em>
+              <span class="bg"></span>
+          </div>
+     </li>
+  </ul>
+ </div>
+ <div class="footer">
+      <span class="footers">H5和CSS3的一些效果</span>
+      <div class="fot">
+            <div id="div1">
+                <div class="front"><img src="img/3.jpg" /></div>
+                <div class="back"><img src="img/9.jpg" /></div>
+                <div class="left"><img src="img/5.jpg" /></div>
+                <div class="right"><img src="img/6.jpg" /></div>
+                <div class="top"><img src="img/7.jpg" /></div>
+                <div class="bottom"><img src="img/8.jpg" /></div>
+            </div>
+            <div id="div2">
+                <div class="front"><img src="img/4.jpg" /></div>
+                <div class="back"><img src="img/10.jpg" /></div>
+                <div class="left"><img src="img/11.jpg" /></div>
+                <div class="right"><img src="img/12.jpg" /></div>
+                <div class="top"><img src="img/13.jpg" /></div>
+                <div class="bottom"><img src="img/14.jpg" /></div>
+            </div>
+            
+      </div>
+ </div>
+ <div class="about">
+      <div class="abouts">个人简介</div>
+      
+      <div id="div3">
+        <div class="call">
+          <h2>联系我</h2>
+          <p>Phone:15055260214</p>
+          <p>E-mail:promisewq.sina.com</p>
+          <p>We-Chat:wq525714jky</p>
+          <em>一份耕耘，一份收获。感谢您在百忙之中给予我的关注，愿贵单位事业蒸蒸日上，屡创佳绩，希望各位领导能对我予以考虑。谢谢！</em>
+        </div> 
+          <span></span>
+      </div>
+          
+ </div>
+</div>
+
+</div>
+
 </body>
 </html>

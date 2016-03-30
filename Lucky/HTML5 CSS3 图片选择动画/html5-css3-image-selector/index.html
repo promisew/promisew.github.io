@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+ 
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+	<script src="js/jquery-1.7.2.js"></script>
+    <script>
+    $(function(){
+		$('li').click(function(){
+			$(this).toggleClass('selected');
+			if($('li.selected').length==0){
+					
+				$('.select').removeClass('selected')
+			}else{
+				
+				$('.select').addClass('selected')
+			}
+			
+			
+			counter();
+		});	
+		
+		$('.select').click(function(){
+			if($('li.selected').length==0){
+				
+				$('li').addClass('selected');
+				$(this).addClass('selected');	
+			}else{
+				
+				$('li').removeClass('selected');
+				$(this).removeClass('selected');	
+			}
+			
+			counter();
+		});
+		
+		function counter(){
+			if($('li.selected').length>0){
+				$('.send').addClass('selected');
+				$('.send').attr('data-counter',$('li.selected').length)
+			}else{
+				$('.send').removeClass('selected');	
+			}
+		}
+	});
+    </script>
+</head>
+
+<body>
+
+  <div class="clearfix">
+      <button class="select">&nbsp;</button>
+      <h1></h1>
+      <button class="send" data-counter="0">&#10004;</button>
+</div>
+
+
+    <ul>
+      <li><img src="11287113923_57d37ed9d3_q.jpg" /></li>
+      <li><img src="8095683964_9e27753908_q.jpg" /></li>
+      <li><img src="8018956825_67bf62c098_q.jpg" /></li>
+      <li><img src="7587724752_cdb9f0c444_q.jpg" /></li>
+      <li><img src="7587738254_707a32f27b_q.jpg" /></li>
+      <li><img src="8095680852_893f685cbd_q.jpg" /></li>
+      <li><img src="8018953043_c6ef9e3b29_q.jpg" /></li>
+      <li><img src="7445019824_914dea4ac3_q.jpg" /></li>
+    </ul>
+
+
+</body>
+
+</html>
